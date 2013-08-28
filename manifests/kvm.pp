@@ -14,8 +14,8 @@ define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $bridge='
       kvm ubuntu  -d /var/lib/libvirt/images/$name -m $memory --cpus=$cpus --rootsize=$rootsize \
       --domain=$domain --bridge=$bridge --ip=$ip --mask=$netmask --gw=$gateway --dns=$resolver \
       --hostname=$name --ssh-key=/root/.ssh/authorized_keys --libvirt=qemu:///system \
-      --verbose --firstboot="/tmp/firstboot_$name" \
+      --verbose --firstboot="/tmp/firstboot_${name}" \
       --copy=/root/cosmos_1.2-2_all.deb --addpkg=openssh-server --addpkg=unattended-upgrades && virsh start $name" ,
-    unless => "/usr/bin/test -d /var/lib/libvirt/images/$nam}",
+    unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
   }
 }
