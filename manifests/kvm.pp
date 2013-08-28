@@ -4,7 +4,12 @@
 define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $bridge='br0', $memory='512', $rootsize='20G', $cpus = '1' ) {
   file { "/tmp/firstboot_${name}": 
      ensure => file,
-     content => "#!/bin/sh\n/root/bootstrap-cosmos.sh ${name} ${repo}"
+     content => "#!/bin/sh\n/root/bootstrap-cosmos.sh ${name} ${repo}\n"
+  }
+  
+  file { "/tmp/files_${name}":
+     ensure => file,
+     content => "/root/cosmos_1.2-2_all.deb"
   }
 
   exec { "create_cosmos_vm_${name}":
@@ -14,7 +19,7 @@ define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $bridge='
       kvm ubuntu  -d /var/lib/libvirt/images/$name -m $memory --cpus=$cpus --rootsize=$rootsize \
       --domain=$domain --bridge=$bridge --ip=$ip --mask=$netmask --gw=$gateway --dns=$resolver \
       --hostname=$name --ssh-key=/root/.ssh/authorized_keys --libvirt=qemu:///system \
-      --verbose --firstboot=/tmp/firstboot_${name} --copy=/root/cosmos_1.2-2_all.deb \
+      --verbose --firstboot=/tmp/firstboot_${name} --copy=/tmp/files_${name} \
       --addpkg=openssh-server --addpkg=unattended-upgrades && virsh start $name" ,
     unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
   }
