@@ -18,4 +18,6 @@ define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $bridge='
       --addpkg=openssh-server --addpkg=unattended-upgrades && virsh start $name" ,
     unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
   }
+
+  File["/tmp/firstboot_${name}"] -> Exec["create_cosmos_vm_${name}"]
 }
