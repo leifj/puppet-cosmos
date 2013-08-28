@@ -9,7 +9,7 @@ define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $bridge='
   
   file { "/tmp/files_${name}":
      ensure => file,
-     content => "/root/cosmos_1.2-2_all.deb"
+     content => "/root/cosmos_1.2-2_all.deb\n"
   }
 
   exec { "create_cosmos_vm_${name}":
