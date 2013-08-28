@@ -20,9 +20,10 @@ define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $bridge='
       --domain=$domain --bridge=$bridge --ip=$ip --mask=$netmask --gw=$gateway --dns=$resolver \
       --hostname=$name --ssh-key=/root/.ssh/authorized_keys --libvirt=qemu:///system \
       --verbose --firstboot=/tmp/firstboot_${name} --copy=/tmp/files_${name} \
-      --addpkg=openssh-server --addpkg=unattended-upgrades && virsh start $name" ,
+      --addpkg=openssh-server --addpkg=unattended-upgrades > /tmp/vm-$name-install.log 2>&1 && virsh start $name" ,
     unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
   }
 
   File["/tmp/firstboot_${name}"] -> Exec["create_cosmos_vm_${name}"]
+  File["/tmp/files_${name}"] -> Exec["create_cosmos_vm_${name}"]
 }
