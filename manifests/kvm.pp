@@ -4,12 +4,12 @@
 define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $suite='precise', $bridge='br0', $memory='512', $rootsize='20G', $cpus = '1' ) {
   file { "/tmp/firstboot_${name}": 
      ensure => file,
-     content => "#!/bin/sh\n/root/bootstrap-cosmos.sh ${name} ${repo}\n"
+     content => "#!/bin/sh\n/root/bootstrap-cosmos.sh ${name} ${repo} && cosmos update && cosmos apply\n"
   }
   
   file { "/tmp/files_${name}":
      ensure => file,
-     content => "/root/cosmos_1.2-2_all.deb /root\n"
+     content => "/root/cosmos_1.2-2_all.deb /root\n/root/bootstrap-cosmos.sh /root\n"
   }
 
   exec { "create_cosmos_vm_${name}":
@@ -18,7 +18,7 @@ define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $suite='p
     command => "virsh destroy $name || true ; virsh undefine $name || true ; /usr/bin/vmbuilder \
       kvm ubuntu  -d /var/lib/libvirt/images/$name -m $memory --cpus=$cpus --rootsize=$rootsize \
       --domain=$domain --bridge=$bridge --ip=$ip --mask=$netmask --gw=$gateway --dns=$resolver \
-      --hostname=$name --ssh-key=/root/.ssh/authorized_keys --suite=$suite --libvirt=qemu:///system \
+      --hostname=$name --ssh-key=/root/.ssh/authorized_keys --suite=$suite --flavour=virtual --libvirt=qemu:///system \
       --verbose --firstboot=/tmp/firstboot_${name} --copy=/tmp/files_${name} \
       --addpkg=openssh-server --addpkg=unattended-upgrades > /tmp/vm-$name-install.log 2>&1 && virsh start $name" ,
     unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
