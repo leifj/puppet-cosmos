@@ -4,7 +4,7 @@
 define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $suite='precise', $bridge='br0', $memory='512', $rootsize='20G', $cpus = '1' ) {
   file { "/tmp/firstboot_${name}": 
      ensure => file,
-     content => "#!/bin/sh\n/root/bootstrap-cosmos.sh ${name} ${repo} && cosmos update && cosmos apply\n"
+     content => "#!/bin/sh\ncd /root && /root/bootstrap-cosmos.sh ${name} ${repo} && cosmos update && cosmos apply\n"
   }
   
   file { "/tmp/files_${name}":
