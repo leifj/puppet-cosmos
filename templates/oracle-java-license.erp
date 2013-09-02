@@ -1,0 +1,2 @@
+debconf shared/accepted-oracle-license-v1-1 select true
+debconf shared/accepted-oracle-license-v1-1 seen true

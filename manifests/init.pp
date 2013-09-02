@@ -1,3 +1,1 @@
-class cosmos {
-
-}
+class cosmos {}
