@@ -1,6 +1,6 @@
 # This manifest is managed using cosmos
 
-class cosmos::cosmos {
+class cosmos::motd {
    file {'motd':
       ensure   => file,
       path     => '/etc/motd.tail',
