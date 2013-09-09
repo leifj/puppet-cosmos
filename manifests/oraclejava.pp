@@ -2,7 +2,7 @@ class cosmos::oraclejava {
    file {'oracle-license-selections':
        ensure   => 'file',
        path     => '/etc/oracle-java-license',
-       content  => template("mnt/oracle-java-license.erp")
+       content  => template("cosmos/oracle-java-license.erp")
    }
    exec {'oracle-license':
        require  => File['oracle-license-selections'],

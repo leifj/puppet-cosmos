@@ -3,7 +3,7 @@ class cosmos::rngtools {
       ensure    => latest
    }
    file {"/etc/default/rng-tools":
-      content   => template("mnt/rng-tools.erp"),
+      content   => template("cosmos/rng-tools.erp"),
       notify    => Service["rng-tools"],
       require   => Package["rng-tools"]
    }
