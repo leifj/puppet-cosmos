@@ -13,7 +13,7 @@ class cosmos::httpsproxy ($listen_ip,$certs = ['/etc/ssl/private/server.pem']) {
       require => Package['ssl-cert'],
    }
    Exec['generate-snakeoil'] -> File['/etc/ssl/private/server.pem']
-   pound::entry {"httpsproxy-443":
+   pound::entry {"$name-httpsproxy-443":
       listen_ip => $listen_ip,
       listen_port => '443',
       listen_protocol => 'ListenHTTPS',
