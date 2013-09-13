@@ -1,5 +1,6 @@
 class cosmos::httpsproxy ($certs = ['/etc/ssl/private/server.pem']) {
    include ufw
+   include pound
    package {'ssl-cert': ensure => latest }
    file {'/etc/ssl/private/server.pem':
       ensure => file,
