@@ -1,4 +1,4 @@
-class cosmos::httpsproxy ($listen_ip,$certs = ['/etc/ssl/private/server.pem']) {
+class cosmos::httpsproxy ($certs = ['/etc/ssl/private/server.pem']) {
    include ufw
    package {'ssl-cert': ensure => latest }
    file {'/etc/ssl/private/server.pem':
@@ -14,7 +14,7 @@ class cosmos::httpsproxy ($listen_ip,$certs = ['/etc/ssl/private/server.pem']) {
    }
    Exec['generate-snakeoil'] -> File['/etc/ssl/private/server.pem']
    pound::entry {"$name-httpsproxy-443":
-      listen_ip => $listen_ip,
+      listen_ip => $ipaddress,
       listen_port => '443',
       listen_protocol => 'ListenHTTPS',
       head_require => 'Host:.*',
