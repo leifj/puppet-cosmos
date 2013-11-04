@@ -16,6 +16,10 @@ define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='5
     content => "/root/cosmos_1.2-2_all.deb /root\n/root/bootstrap-cosmos.sh /root\n",
   } ->
 
+  exec { "check_kvm_enabled_${name}":
+    command => "/usr/sbin/kvm-ok",
+  } ->
+
   exec { "create_cosmos_vm_${name}":
     path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     timeout => '3600',
@@ -26,14 +30,16 @@ define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='5
     --addpkg openssh-server --addpkg unattended-upgrades > /tmp/vm-$name-install.log 2>&1" ,
     unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
     before => File["${name}.xml"],
-    require => Package['python-vm-builder'],
+    require => [Package['python-vm-builder'],
+                Exec["check_kvm_enabled_${name}"],
+                ],
   }
 
   #
   # Start
   #
   file { "${name}.xml":
-    ensure  => 'file',
+    ensure  => 'present',
     path    => "/etc/libvirt/qemu/${name}.xml",
   } ->
 
@@ -49,6 +55,8 @@ define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='5
     command => "virsh start $name",
     onlyif  => "grep -q \"<mac address='${mac}'/>\" /etc/libvirt/qemu/${name}.xml",
     unless  => "virsh list | egrep -q \\ ${name}\\ +running",
+    require => [Exec["check_kvm_enabled_${name}"],
+                ],
   }
 
 }
