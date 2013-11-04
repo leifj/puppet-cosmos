@@ -16,10 +16,6 @@ define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='5
     content => "/root/cosmos_1.2-2_all.deb /root\n/root/bootstrap-cosmos.sh /root\n",
   } ->
 
-  package {'python-vm-builder':
-    ensure    => 'installed',
-  } ->
-
   exec { "create_cosmos_vm_${name}":
     path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     timeout => '3600',
@@ -30,6 +26,7 @@ define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='5
     --addpkg openssh-server --addpkg unattended-upgrades > /tmp/vm-$name-install.log 2>&1" ,
     unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
     before => File["${name}.xml"],
+    require => Package['python-vm-builder'],
   }
 
   #
