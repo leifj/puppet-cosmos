@@ -24,7 +24,7 @@ define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='5
     path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     timeout => '3600',
     command => "virsh destroy $name || true ; virsh undefine $name || true ; /usr/bin/vmbuilder \
-    kvm ubuntu -d /var/lib/libvirt/images/$name -m $memory --cpus $cpus --rootsize $rootsize \
+    kvm ubuntu -d /var/lib/libvirt/images/$name -m $memory --cpus $cpus --rootsize $rootsize --bridge $bridge \
     --hostname $name --ssh-key /root/.ssh/authorized_keys --suite $suite --flavour virtual --libvirt qemu:///system \
     --verbose --firstboot /tmp/firstboot_${name} --copy /tmp/files_${name} \
     --addpkg openssh-server --addpkg unattended-upgrades > /tmp/vm-$name-install.log 2>&1" ,
