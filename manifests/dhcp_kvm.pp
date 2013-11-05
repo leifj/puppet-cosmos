@@ -59,6 +59,17 @@ define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='5
                 ],
   }
 
+  #
+  # Exec virsh define IF the mac address in the XML is replaced - NOOP otherwise
+  #
+  exec { "virsh_define_${name}":
+    path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+    timeout => '60',
+    command => "virsh define /etc/libvirt/qemu/${name}.xml",
+    refreshonly => true,
+    subscribe   => Cosmos_kvm_replace["replace_mac_${name}"],
+    before      => Exec["start_cosmos_vm_${name}"],
+  }
 }
 
 
@@ -68,4 +79,3 @@ define cosmos_kvm_replace($file, $pattern_no_slashes, $replacement_no_slashes) {
     onlyif => "/usr/bin/perl -ne 'BEGIN { \$ret = 1; } \$ret = 0 if /$pattern_no_slashes/ && ! /$replacement_no_slashes/ ; END { exit \$ret; }' '$file'",
   }
 }
-
