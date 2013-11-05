@@ -1,7 +1,7 @@
 
 # inspired by http://blogs.thehumanjourney.net/oaubuntu/entry/kvm_vmbuilder_puppet_really_automated
 
-define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='512', $rootsize='20G', $cpus = '1' ) {
+define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='512', $rootsize='20G', $cpus = '1', $iptables_input = 'INPUT', $iptables_output = 'OUTPUT', $iptables_forard = 'FORWARD' ) {
 
   #
   # Create
@@ -49,6 +49,13 @@ define cosmos::dhcp_kvm($mac, $repo, $suite='precise', $bridge='br0', $memory='5
     replacement_no_slashes => "<mac address=\\x27${mac}\\x27\\/>",  # \x27 is single quote in perl
   } ->
 
+  cosmos_kvm_iptables { "fix_kvm_iptables_${name}":
+    bridge          => $bridge,
+    iptables_input  => $iptables_input,
+    iptables_output => $iptables_output,
+    iptables_forward => $iptables_forward,
+  } ->
+
   exec { "start_cosmos_vm_${name}":
     path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     timeout => '60',
@@ -78,4 +85,29 @@ define cosmos_kvm_replace($file, $pattern_no_slashes, $replacement_no_slashes) {
   exec { "/usr/bin/perl -pi -e 's/$pattern_no_slashes/$replacement_no_slashes/' '$file'":
     onlyif => "/usr/bin/perl -ne 'BEGIN { \$ret = 1; } \$ret = 0 if /$pattern_no_slashes/ && ! /$replacement_no_slashes/ ; END { exit \$ret; }' '$file'",
   }
+}
+
+define cosmos_kvm_iptables($bridge = 'br0', $iptables_input = 'INPUT', $iptables_output = 'OUTPUT', $iptables_forward = 'FORWARD') {
+  exec {"${name}_cmd":
+    command => "iptables --new-chain cosmos-kvm-traffic &&
+
+    # if LOCAL, don't filter here
+    iptables -A cosmos-kvm-traffic -m addrtype --dst-type LOCAL -j RETURN &&
+
+    # Allow bridge interface traffic that was not LOCAL
+    iptables -A cosmos-kvm-traffic -i $bridge -j ACCEPT &&
+
+    # Allow bridge interface traffic that was not LOCAL
+    iptables -A cosmos-kvm-traffic -o $bridge -j ACCEPT &&
+
+    # Anything else, don't filter here
+    iptables -A cosmos-kvm-traffic -j RETURN &&
+
+    # Jump to this chain from input/output chains specified
+    iptables -I $iptables_input -j cosmos-kvm-traffic &&
+    iptables -I $iptables_output -j cosmos-kvm-traffic &&
+    true",
+    unless => "iptables -L cosmos-kvm-traffic",
+  }
+
 }
