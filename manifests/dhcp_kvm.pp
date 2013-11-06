@@ -106,6 +106,7 @@ define cosmos_kvm_iptables($bridge = 'br0', $iptables_input = 'INPUT', $iptables
     # Jump to this chain from input/output chains specified
     iptables -I $iptables_input -j cosmos-kvm-traffic &&
     iptables -I $iptables_output -j cosmos-kvm-traffic &&
+    iptables -I $iptables_forward -j cosmos-kvm-traffic &&
     true",
     unless => "iptables -L cosmos-kvm-traffic",
   }
