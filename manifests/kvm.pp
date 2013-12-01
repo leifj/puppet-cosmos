@@ -3,11 +3,11 @@
 
 define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $suite='precise', $bridge='br0', $memory='512', $rootsize='20G', $cpus = '1' ) {
 
-  file { "/tmp/firstboot_${name}": 
+  file { "/tmp/firstboot_${name}":
      ensure => file,
-     content => "#!/bin/sh\ncd /root && sed -i \"s/${name}.${domain}//g\" /etc/hosts && /root/bootstrap-cosmos.sh ${name} ${repo} && cosmos update && cosmos apply\n"
+     content => "#!/bin/sh\nuserdel -r ubuntu; cd /root && sed -i \"s/${name}.${domain}//g\" /etc/hosts && /root/bootstrap-cosmos.sh ${name} ${repo} && cosmos update && cosmos apply\n"
   }
-  
+
   file { "/tmp/files_${name}":
      ensure => file,
      content => "/root/cosmos_1.2-2_all.deb /root\n/root/bootstrap-cosmos.sh /root\n"
@@ -21,7 +21,7 @@ define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $suite='p
       --domain $domain --bridge $bridge --ip $ip --mask $netmask --gw $gateway --dns $resolver \
       --hostname $name --ssh-key /root/.ssh/authorized_keys --suite $suite --flavour virtual --libvirt qemu:///system \
       --verbose --firstboot /tmp/firstboot_${name} --copy /tmp/files_${name} \
-      --addpkg openssh-server --addpkg unattended-upgrades > /tmp/vm-$name-install.log 2>&1 && virsh start $name" ,
+      --addpkg unattended-upgrades > /tmp/vm-$name-install.log 2>&1 && virsh start $name" ,
     unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
   }
 

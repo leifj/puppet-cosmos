@@ -8,7 +8,7 @@ define cosmos::dhcp_kvm($mac, $repo, $tagpattern, $suite='precise', $bridge='br0
   #
   file { "/tmp/firstboot_${name}":
     ensure => file,
-    content => "#!/bin/sh\ncd /root && sed -i \"s/${name}.${domain}//g\" /etc/hosts && /root/bootstrap-cosmos.sh ${name} ${repo} ${tagpattern} && cosmos update && cosmos apply\n",
+    content => "#!/bin/sh\nuserdel -r ubuntu; cd /root && sed -i \"s/${name}.${domain}//g\" /etc/hosts && /root/bootstrap-cosmos.sh ${name} ${repo} ${tagpattern} && cosmos update && cosmos apply\n",
   } ->
 
   file { "/tmp/files_${name}":
@@ -27,7 +27,7 @@ define cosmos::dhcp_kvm($mac, $repo, $tagpattern, $suite='precise', $bridge='br0
     kvm ubuntu -d /var/lib/libvirt/images/$name -m $memory --cpus $cpus --rootsize $rootsize --bridge $bridge \
     --hostname $name --ssh-key /root/.ssh/authorized_keys --suite $suite --flavour virtual --libvirt qemu:///system \
     --verbose --firstboot /tmp/firstboot_${name} --copy /tmp/files_${name} \
-    --addpkg openssh-server --addpkg unattended-upgrades > /tmp/vm-$name-install.log 2>&1" ,
+    --addpkg unattended-upgrades > /tmp/vm-$name-install.log 2>&1" ,
     unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
     before => File["${name}.xml"],
     require => [Package['python-vm-builder'],
