@@ -8,7 +8,7 @@ define cosmos::dhcp_kvm($mac, $repo, $tagpattern, $suite='precise', $bridge='br0
   #
   file { "/tmp/firstboot_${name}":
     ensure => file,
-    content => "#!/bin/sh\ncd /root && sed -i \"s/${name}.${domain}//g\" /etc/hosts && /root/bootstrap-cosmos.sh ${name} ${repo} ${tagpattern} && cosmos update && cosmos apply\n",
+    content => "#!/bin/sh\nusermod --lock ubuntu; cd /root && sed -i \"s/${name}.${domain}//g\" /etc/hosts && /root/bootstrap-cosmos.sh ${name} ${repo} ${tagpattern} && cosmos update && cosmos apply\n",
   } ->
 
   file { "/tmp/files_${name}":
