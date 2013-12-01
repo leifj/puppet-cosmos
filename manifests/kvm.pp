@@ -21,7 +21,7 @@ define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $suite='p
       --domain $domain --bridge $bridge --ip $ip --mask $netmask --gw $gateway --dns $resolver \
       --hostname $name --ssh-key /root/.ssh/authorized_keys --suite $suite --flavour virtual --libvirt qemu:///system \
       --verbose --firstboot /tmp/firstboot_${name} --copy /tmp/files_${name} \
-      --addpkg openssh-server --addpkg unattended-upgrades > /tmp/vm-$name-install.log 2>&1 && virsh start $name" ,
+      --addpkg unattended-upgrades > /tmp/vm-$name-install.log 2>&1 && virsh start $name" ,
     unless => "/usr/bin/test -d /var/lib/libvirt/images/${name}",
   }
 
