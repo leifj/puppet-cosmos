@@ -1,13 +1,13 @@
 
 # inspired by http://blogs.thehumanjourney.net/oaubuntu/entry/kvm_vmbuilder_puppet_really_automated
 
-define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $suite='precise', $bridge='br0', $memory='512', $rootsize='20G', $cpus = '1' ) {
+define cosmos::kvm($domain, $ip, $netmask, $resolver, $gateway, $repo, $tagpattern, $suite='precise', $bridge='br0', $memory='512', $rootsize='20G', $cpus = '1' ) {
 
   package { python-vm-builder: ensure => latest } ->
 
   file { "/tmp/firstboot_${name}":
      ensure => file,
-     content => "#!/bin/sh\nuserdel -r ubuntu; cd /root && sed -i \"s/${name}.${domain}//g\" /etc/hosts && /root/bootstrap-cosmos.sh ${name} ${repo} && cosmos update ; cosmos apply\n"
+     content => "#!/bin/sh\nuserdel -r ubuntu; cd /root && sed -i \"s/${name}.${domain}//g\" /etc/hosts && /root/bootstrap-cosmos.sh ${name} ${repo} ${tagpattern} && cosmos update ; cosmos apply\n"
   }
 
   file { "/tmp/files_${name}":
