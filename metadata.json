@@ -1,13 +1,13 @@
 {
-  "name": "puppet-mon",
+  "name": "puppet-cosmos",
   "version": "1.0.0",
   "author": "Leif Joahansson",
-  "summary": "A puppet module for mon",
+  "summary": "A puppet module for cosmos",
   "license": "BSD",
-  "source": "git://github.com/samlbits/puppet-mon",
-  "project_page": "https://github.com/samlbits/puppet-mon",
-  "issues_url": "https://github.com/samlbits/puppet-mon/issues",
-  "description": "Installs and manages mon & configuration",
+  "source": "git://github.com/samlbits/puppet-cosmos",
+  "project_page": "https://github.com/samlbits/puppet-cosmos",
+  "issues_url": "https://github.com/samlbits/puppet-cosmos/issues",
+  "description": "Installs and manages cosmos & configuration",
   "dependencies": [
   
   ]
