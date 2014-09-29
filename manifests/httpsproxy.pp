@@ -23,7 +23,7 @@ class cosmos::httpsproxy ($certs = ['/etc/ssl/private/server.pem']) {
       backend_ip => '127.0.0.1',
       backend_port => '80',
       ssl_ciphers => $ssl_ciphers,
-      server_certs => $certs
+      certs => $certs
    }
    include augeas
    augeas { "etc_default_pound":
