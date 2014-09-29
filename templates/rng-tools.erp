@@ -1,2 +1,2 @@
 HRNGDEVICE=/dev/urandom
-RNGDOPTIONS="-o /dev/random -t 1 --fill-watermark=90%"
+RNGDOPTIONS="-o /dev/random --fill-watermark=90%"
