@@ -1,0 +1,14 @@
+{
+  "name": "puppet-mon",
+  "version": "1.0.0",
+  "author": "Leif Joahansson",
+  "summary": "A puppet module for mon",
+  "license": "BSD",
+  "source": "git://github.com/samlbits/puppet-mon",
+  "project_page": "https://github.com/samlbits/puppet-mon",
+  "issues_url": "https://github.com/samlbits/puppet-mon/issues",
+  "description": "Installs and manages mon & configuration",
+  "dependencies": [
+  
+  ]
+}
