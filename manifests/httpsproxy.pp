@@ -14,7 +14,7 @@ class cosmos::httpsproxy ($certs = ['/etc/ssl/private/server.pem']) {
       require => Package['ssl-cert'],
    }
    Exec['generate-snakeoil'] -> File['/etc/ssl/private/server.pem']
-   $ssl_ciphers = 'DHE-RSA-CAMELLIA256-SHA DHE-RSA-AES256-SHA ECDHE-RSA-AES256-SHA DHE-RSA-AES128-SHA DES-CBC3-SHA !ADH !aNULL',
+   $ssl_ciphers = 'DHE-RSA-CAMELLIA256-SHA DHE-RSA-AES256-SHA ECDHE-RSA-AES256-SHA DHE-RSA-AES128-SHA DES-CBC3-SHA !ADH !aNULL'
    pound::entry {"$name-httpsproxy-443":
       listen_ip => $ipaddress,
       listen_port => '443',
