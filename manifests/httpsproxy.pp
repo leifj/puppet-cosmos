@@ -23,7 +23,7 @@ class cosmos::httpsproxy ($certs = ['/etc/ssl/private/server.pem']) {
       head_require => 'Host:.*',
       backend_ip => '127.0.0.1',
       backend_port => '80',
-      ssl_ciphers  => "!RC4 HIGH MEDIUM",
+      ssl_ciphers  => "${ssl_ciphers_dfri} ${ssl_ciphers_eduid_pfs}",
       server_certs => $certs
    }
    include augeas
