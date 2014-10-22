@@ -17,7 +17,7 @@ class cosmos::httpsproxy ($certs = ['/etc/ssl/private/server.pem']) {
    $ssl_ciphers_dfri = "ECDHE-ECDSA-AES256-GCM-SHA384 ECDHE-RSA-AES256-GCM-SHA384 ECDHE-ECDSA-AES256-SHA384 ECDHE-RSA-AES256-SHA384 ECDHE-ECDSA-AES128-GCM-SHA256 ECDHE-RSA-AES128-GCM-SHA256 ECDHE-ECDSA-AES128-SHA256 ECDHE-RSA-AES128-SHA256 ECDHE-RSA-AES256-SHA DHE-RSA-AES256-SHA DHE-RSA-AES128-SHA AES256-SHA256"
    $ssl_ciphers_eduid_pfs = "DHE-RSA-CAMELLIA256-SHA DHE-RSA-AES256-SHA"
    pound::entry {"$name-httpsproxy-443":
-      listen_ip => $ipaddress,
+      listen_ip => '0.0.0.0',
       listen_port => '443',
       listen_protocol => 'ListenHTTPS',
       head_require => 'Host:.*',
