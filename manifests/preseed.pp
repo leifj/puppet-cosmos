@@ -2,7 +2,7 @@ class cosmos::preseed {
   define preseed_package ( $ensure, $domain) {
     file { "/tmp/$name.preseed":
       content => template("cosmos/$name.preseed"),
-      mode => 600,
+      mode => '0600',
       backup => false,
     }
     package { "$name":
